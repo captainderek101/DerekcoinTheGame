@@ -1,0 +1,205 @@
+:root {
+  --bg: #0f1222;
+  --panel: #171b31;
+  --panel-alt: #1f2442;
+  --text: #f4f7ff;
+  --muted: #b8c0e6;
+  --accent: #f7931a;
+  --accent-hover: #ffad4d;
+  --good: #31d07f;
+  --danger: #f05f74;
+  --border: #2c345f;
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 600px at 15% 5%, #22284c 0%, transparent 60%),
+    radial-gradient(1000px 500px at 95% 90%, #2d1f49 0%, transparent 65%),
+    var(--bg);
+}
+
+.game {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 20px;
+  height: 100vh;
+}
+
+.left-panel,
+.right-panel {
+  background: linear-gradient(180deg, var(--panel), #13172c);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  letter-spacing: 0.4px;
+}
+
+.counter {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 700;
+  margin: 4px 0 18px;
+  color: #ffffff;
+  text-shadow: 0 4px 16px rgba(247, 147, 26, 0.35);
+}
+
+.coin-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 100ms ease;
+  border-radius: 50%;
+}
+
+.coin-button:hover {
+  transform: scale(1.04);
+}
+
+.coin-button:active {
+  transform: scale(0.96);
+}
+
+.coin-svg {
+  width: min(340px, 55vw);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 20px rgba(247, 147, 26, 0.35));
+}
+
+.hint {
+  color: var(--muted);
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.right-panel {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.assets-title {
+  margin: 2px 6px 12px;
+  font-weight: 700;
+  font-size: 1.06rem;
+  color: #dce4ff;
+}
+
+.assets-scroll {
+  overflow-y: auto;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.asset-card {
+  background: linear-gradient(180deg, var(--panel-alt), #1a1f3a);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.asset-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.asset-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.asset-cost {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.asset-desc {
+  color: #c8d1f2;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.asset-owned {
+  color: var(--good);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.buy-btn {
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: #1b1202;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: background-color 120ms ease, opacity 120ms ease;
+}
+
+.buy-btn:hover {
+  background: var(--accent-hover);
+}
+
+.buy-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background: #8d8d99;
+  color: #eeeeee;
+}
+
+.status {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  min-height: 1.2em;
+}
+
+@media (max-width: 900px) {
+  .game {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 40vh;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .left-panel {
+    min-height: 58vh;
+  }
+}

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$DEREK To The Moon!</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="game">
+    <section class="left-panel">
+      <h1>$DEREK To The Moon!</h1>
+      <div id="counter" class="counter">Clicks: 0</div>
+
+      <button id="clickButton" class="coin-button" aria-label="Mine Derekcoin">
+        <svg class="coin-svg" viewBox="0 0 200 200" role="img" aria-label="Bitcoin style coin">
+          <defs>
+            <radialGradient id="coinGradient" cx="35%" cy="30%" r="75%">
+              <stop offset="0%" stop-color="#ffcb74"></stop>
+              <stop offset="60%" stop-color="#f7931a"></stop>
+              <stop offset="100%" stop-color="#d97a09"></stop>
+            </radialGradient>
+          </defs>
+
+          <circle cx="100" cy="100" r="90" fill="url(#coinGradient)" stroke="#ffcb74" stroke-width="5"></circle>
+          <circle cx="100" cy="100" r="76" fill="none" stroke="#ffd899" stroke-width="3" opacity="0.85"></circle>
+
+          <g fill="#ffffff">
+            <rect x="87" y="50" width="8" height="96" rx="3"></rect>
+            <rect x="106" y="50" width="8" height="96" rx="3"></rect>
+            <path d="M74 70h43c17 0 28 8 28 21 0 9-6 16-16 19 12 3 19 10 19 22 0 15-12 25-31 25H74v-18h40c9 0 14-4 14-10s-5-9-13-9H74v-18h38c8 0 12-3 12-8s-4-8-11-8H74z"></path>
+          </g>
+        </svg>
+      </button>
+
+      <div class="hint">Click the coin to pump Derekcoin.</div>
+      <div class="hint" id="rateText">Passive income: 0 clicks/sec</div>
+    </section>
+
+    <aside class="right-panel">
+      <div class="assets-title">Financial Assets</div>
+      <div class="assets-scroll">
+        <section class="asset-card">
+          <div class="asset-row">
+            <div class="asset-name">Used Laptop</div>
+            <div class="asset-cost">Cost: 10 clicks</div>
+          </div>
+          <p class="asset-desc">
+            Salvaged from a post-rugpull startup. Each laptop auto-farms 1 click per second.
+          </p>
+          <div class="asset-row">
+            <div id="laptopsOwned" class="asset-owned">Owned: 0</div>
+            <button id="buyLaptopButton" class="buy-btn">Buy</button>
+          </div>
+        </section>
+        <section class="asset-card">
+          <div class="asset-row">
+            <div class="asset-name">Crypto Farms</div>
+            <div class="asset-cost">Cost: 100 clicks</div>
+          </div>
+          <p class="asset-desc">
+            Containerized miner farms that print hype and clicks at industrial scale.
+          </p>
+          <div class="asset-row">
+            <div id="cryptoFarmsOwned" class="asset-owned">Owned: 0</div>
+            <button id="buyCryptoFarmButton" class="buy-btn">Buy</button>
+          </div>
+        </section>
+        <section class="asset-card">
+          <div class="asset-row">
+            <div class="asset-name">GPU Suppliers</div>
+            <div class="asset-cost">Cost: 1000 clicks</div>
+          </div>
+          <p class="asset-desc">
+            Backroom deal pipelines for graphics cards that fuel your meme-coin empire.
+          </p>
+          <div class="asset-row">
+            <div id="gpuSuppliersOwned" class="asset-owned">Owned: 0</div>
+            <button id="buyGpuSupplierButton" class="buy-btn">Buy</button>
+          </div>
+        </section>
+        <section class="asset-card">
+          <div class="asset-row">
+            <div class="asset-name">Consumer RAM Brands</div>
+            <div class="asset-cost">Cost: 10,000 clicks</div>
+          </div>
+          <p class="asset-desc">
+            Memory product empires with big margins and even bigger click-generation capacity.
+          </p>
+          <div class="asset-row">
+            <div id="ramBrandsOwned" class="asset-owned">Owned: 0</div>
+            <button id="buyRamBrandButton" class="buy-btn">Buy</button>
+          </div>
+        </section>
+      </div>
+      <div id="status" class="status"></div>
+    </aside>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
