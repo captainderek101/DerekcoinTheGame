@@ -13,7 +13,7 @@ const PLUS_ONE_MIN_UPWARD_VELOCITY = -760;
 const PLUS_ONE_MAX_UPWARD_VELOCITY = -620;
 const PLUS_ONE_MAX_HORIZONTAL_VELOCITY = 260;
 
-let clicks = 0;
+let market_value_cents = 0;
 let passiveFractionBuffer = 0;
 let activePlusOnes = [];
 let lastPlusOneFrameTime = performance.now();
@@ -30,8 +30,8 @@ const assets = [
   {
     id: "cryptoFarm",
     name: "Crypto Farms",
-    cost: 100,
-    passivePerSecond: 20,
+    cost: 200,
+    passivePerSecond: 40,
     owned: 0,
     ownedEl: document.getElementById("cryptoFarmsOwned"),
     buyButtonEl: document.getElementById("buyCryptoFarmButton"),
@@ -39,8 +39,8 @@ const assets = [
   {
     id: "gpuSupplier",
     name: "GPU Suppliers",
-    cost: 1000,
-    passivePerSecond: 80,
+    cost: 6000,
+    passivePerSecond: 800,
     owned: 0,
     ownedEl: document.getElementById("gpuSuppliersOwned"),
     buyButtonEl: document.getElementById("buyGpuSupplierButton"),
@@ -48,8 +48,8 @@ const assets = [
   {
     id: "ramBrand",
     name: "Consumer RAM Brands",
-    cost: 10000,
-    passivePerSecond: 400,
+    cost: 240000,
+    passivePerSecond: 16000,
     owned: 0,
     ownedEl: document.getElementById("ramBrandsOwned"),
     buyButtonEl: document.getElementById("buyRamBrandButton"),
@@ -75,7 +75,7 @@ function getCookie(name) {
 
 function saveGame() {
   const saveData = {
-    clicks,
+    clicks: market_value_cents,
     assets: {},
   };
 
@@ -97,7 +97,7 @@ function loadGame() {
     const parsedSave = JSON.parse(decodeURIComponent(rawSave));
 
     if (typeof parsedSave.clicks === "number" && Number.isFinite(parsedSave.clicks)) {
-      clicks = Math.max(0, Math.floor(parsedSave.clicks));
+      market_value_cents = Math.max(0, Math.floor(parsedSave.clicks));
     }
 
     if (parsedSave.assets && typeof parsedSave.assets === "object") {
@@ -118,12 +118,16 @@ function getTotalPassivePerSecond() {
 }
 
 function updateUI() {
-  counterEl.textContent = `Clicks: ${clicks}`;
-  rateTextEl.textContent = `Passive income: ${getTotalPassivePerSecond()} clicks/sec`;
+  const padded_mkv = String(market_value_cents).padStart(3, '0');
+  const mkv_to_display = padded_mkv.slice(0, -2) + '.' + padded_mkv.slice(-2);
+  counterEl.textContent = `Market value: $${mkv_to_display}`;
+  const padded_growth = String(getTotalPassivePerSecond()).padStart(3, '0');
+  const grown_to_display = padded_growth.slice(0, -2) + '.' + padded_growth.slice(-2);
+  rateTextEl.textContent = `Growth rate: $${grown_to_display}/sec`;
 
   for (const asset of assets) {
     asset.ownedEl.textContent = `Owned: ${asset.owned}`;
-    asset.buyButtonEl.disabled = clicks < asset.cost;
+    asset.buyButtonEl.disabled = market_value_cents < asset.cost;
   }
 }
 
@@ -133,12 +137,12 @@ function setStatus(message, isError = false) {
 }
 
 function buyAsset(asset) {
-  if (clicks < asset.cost) {
+  if (market_value_cents < asset.cost) {
     setStatus(`Not enough clicks to buy ${asset.name}.`, true);
     return;
   }
 
-  clicks -= asset.cost;
+  market_value_cents -= asset.cost;
   asset.owned += 1;
   setStatus(`Purchased ${asset.name}. Passive farming increased.`);
   updateUI();
@@ -200,7 +204,7 @@ function animatePlusOneSprites(frameTime) {
 }
 
 clickButtonEl.addEventListener("click", (event) => {
-  clicks += 1;
+  market_value_cents += 1;
   spawnPlusOneSprite(event.clientX, event.clientY);
   updateUI();
 });
@@ -219,7 +223,7 @@ setInterval(() => {
   const wholeClicksToAdd = Math.floor(passiveFractionBuffer);
 
   if (wholeClicksToAdd > 0) {
-    clicks += wholeClicksToAdd;
+    market_value_cents += wholeClicksToAdd;
     passiveFractionBuffer -= wholeClicksToAdd;
     updateUI();
   }
