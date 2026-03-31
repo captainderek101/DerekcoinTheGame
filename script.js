@@ -2,10 +2,21 @@ const counterEl = document.getElementById("counter");
 const clickButtonEl = document.getElementById("clickButton");
 const rateTextEl = document.getElementById("rateText");
 const statusEl = document.getElementById("status");
+const fxLayerEl = document.getElementById("fxLayer");
 const SAVE_COOKIE_NAME = "derekcoin_save";
 const SAVE_INTERVAL_MS = 10000;
+const PASSIVE_TICKS_PER_SECOND = 30;
+const PLUS_ONE_LIFETIME_MS = 1000;
+const PLUS_ONE_FADE_DELAY_MS = 200;
+const PLUS_ONE_GRAVITY = 2200;
+const PLUS_ONE_MIN_UPWARD_VELOCITY = -760;
+const PLUS_ONE_MAX_UPWARD_VELOCITY = -620;
+const PLUS_ONE_MAX_HORIZONTAL_VELOCITY = 260;
 
 let clicks = 0;
+let passiveFractionBuffer = 0;
+let activePlusOnes = [];
+let lastPlusOneFrameTime = performance.now();
 const assets = [
   {
     id: "usedLaptop",
@@ -133,8 +144,64 @@ function buyAsset(asset) {
   updateUI();
 }
 
-clickButtonEl.addEventListener("click", () => {
+function spawnPlusOneSprite(mouseX, mouseY) {
+  const buttonRect = clickButtonEl.getBoundingClientRect();
+  const startX = typeof mouseX === "number" ? mouseX : buttonRect.left + (buttonRect.width / 2);
+  const startY = typeof mouseY === "number" ? mouseY : buttonRect.top + (buttonRect.height / 2);
+  const randomHorizontalVelocity = (Math.random() * 2 - 1) * PLUS_ONE_MAX_HORIZONTAL_VELOCITY;
+  const randomUpwardVelocity =
+    PLUS_ONE_MIN_UPWARD_VELOCITY +
+    Math.random() * (PLUS_ONE_MAX_UPWARD_VELOCITY - PLUS_ONE_MIN_UPWARD_VELOCITY);
+
+  const spriteEl = document.createElement("img");
+  spriteEl.src = "plus-one.svg";
+  spriteEl.alt = "+1";
+  spriteEl.className = "plus-one-sprite";
+  spriteEl.style.left = `${startX}px`;
+  spriteEl.style.top = `${startY}px`;
+  fxLayerEl.appendChild(spriteEl);
+
+  activePlusOnes.push({
+    el: spriteEl,
+    x: startX,
+    y: startY,
+    vx: randomHorizontalVelocity,
+    vy: randomUpwardVelocity,
+    ageMs: 0,
+  });
+}
+
+function animatePlusOneSprites(frameTime) {
+  const deltaSeconds = Math.min((frameTime - lastPlusOneFrameTime) / 1000, 0.05);
+  lastPlusOneFrameTime = frameTime;
+
+  for (let i = activePlusOnes.length - 1; i >= 0; i -= 1) {
+    const sprite = activePlusOnes[i];
+    sprite.ageMs += deltaSeconds * 1000;
+    sprite.vy += PLUS_ONE_GRAVITY * deltaSeconds;
+    sprite.x += sprite.vx * deltaSeconds;
+    sprite.y += sprite.vy * deltaSeconds;
+
+    sprite.el.style.left = `${sprite.x}px`;
+    sprite.el.style.top = `${sprite.y}px`;
+
+    if (sprite.ageMs > PLUS_ONE_FADE_DELAY_MS) {
+      const fadeProgress = (sprite.ageMs - PLUS_ONE_FADE_DELAY_MS) / (PLUS_ONE_LIFETIME_MS - PLUS_ONE_FADE_DELAY_MS);
+      sprite.el.style.opacity = `${Math.max(0, 1 - fadeProgress)}`;
+    }
+
+    if (sprite.ageMs >= PLUS_ONE_LIFETIME_MS || sprite.y > window.innerHeight + 40) {
+      sprite.el.remove();
+      activePlusOnes.splice(i, 1);
+    }
+  }
+
+  window.requestAnimationFrame(animatePlusOneSprites);
+}
+
+clickButtonEl.addEventListener("click", (event) => {
   clicks += 1;
+  spawnPlusOneSprite(event.clientX, event.clientY);
   updateUI();
 });
 
@@ -143,12 +210,20 @@ for (const asset of assets) {
 }
 
 setInterval(() => {
-  const passiveGain = getTotalPassivePerSecond();
-  if (passiveGain > 0) {
-    clicks += passiveGain;
+  const passivePerSecond = getTotalPassivePerSecond();
+  if (passivePerSecond <= 0) {
+    return;
+  }
+
+  passiveFractionBuffer += passivePerSecond / PASSIVE_TICKS_PER_SECOND;
+  const wholeClicksToAdd = Math.floor(passiveFractionBuffer);
+
+  if (wholeClicksToAdd > 0) {
+    clicks += wholeClicksToAdd;
+    passiveFractionBuffer -= wholeClicksToAdd;
     updateUI();
   }
-}, 1000);
+}, 1000 / PASSIVE_TICKS_PER_SECOND);
 
 setInterval(() => {
   saveGame();
@@ -158,5 +233,6 @@ window.addEventListener("beforeunload", () => {
   saveGame();
 });
 
+window.requestAnimationFrame(animatePlusOneSprites);
 loadGame();
 updateUI();

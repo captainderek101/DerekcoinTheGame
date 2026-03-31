@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <radialGradient id="coinGradient" cx="35%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#ffcb74"/>
+      <stop offset="0.6" stop-color="#f7931a"/>
+      <stop offset="1" stop-color="#d97a09"/>
+    </radialGradient>
+    <bx:export>
+      <bx:file format="svg" href="#object-0"/>
+      <bx:file format="svg" href="#object-1" path="Untitled 2.svg"/>
+    </bx:export>
+  </defs>
+  <circle cx="250" cy="250" r="227.821" fill="url(#coinGradient)" stroke="#ffcb74" stroke-width="5" style="stroke-width: 5;" id="object-0"/>
+  <circle cx="250" cy="250" r="192.382" fill="none" stroke="#ffd899" stroke-width="3" opacity="0.85" style="stroke-width: 3;" id="object-1"/>
+  <rect x="217.091" y="128.495" width="20.251" height="243.009" rx="3" fill="#ffffff" style="stroke-width: 2.531;"/>
+  <rect x="265.187" y="128.495" width="20.251" height="243.009" rx="3" fill="#ffffff" style="stroke-width: 2.531;"/>
+  <path d="M 136.078 209.647 L 248.264 172.074 C 273.569 163.599 292.853 158.158 306.118 155.752 C 323.973 152.532 339.253 152.319 351.956 155.112 C 364.685 157.897 374.365 163.278 380.998 171.254 C 387.63 179.244 390.946 190.715 390.946 205.669 C 390.946 218.813 387.834 231.185 381.61 242.783 C 374.008 256.947 363.154 269.988 349.048 281.908 C 338.411 290.911 324.037 299.973 305.926 309.094 C 292.381 315.881 274.27 323.072 251.593 330.667 L 136.078 369.355 L 136.078 209.647 Z M 171.157 224.931 L 171.157 330.693 L 243.29 306.535 C 260.432 300.794 272.803 296.141 280.405 292.577 C 290.379 287.937 298.644 282.958 305.199 277.64 C 311.78 272.314 317.137 265.381 321.27 256.842 C 325.427 248.294 327.506 237.85 327.506 225.509 C 327.506 213.154 325.427 204.37 321.27 199.157 C 317.137 193.935 311.334 190.72 303.86 189.512 C 296.386 188.316 286.91 188.985 275.431 191.516 C 266.86 193.382 250.063 198.504 225.039 206.885 L 171.157 224.931 Z" style="fill: rgb(255, 255, 255); text-wrap-mode: nowrap;"/>
+</svg>

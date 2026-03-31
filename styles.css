@@ -21,10 +21,25 @@ body {
   min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
   color: var(--text);
-  background:
-    radial-gradient(1200px 600px at 15% 5%, #22284c 0%, transparent 60%),
-    radial-gradient(1000px 500px at 95% 90%, #2d1f49 0%, transparent 65%),
-    var(--bg);
+  background-size: 100% 100%;
+  animation: breathe-color 14s ease-in-out infinite alternate;
+}
+
+@keyframes breathe-color {
+  0% {
+    background-color: #17348a; /* Start color */
+  }
+  100% {
+    background-color: #7f2cb8; /* End color */
+  }
+}
+
+.fx-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 999;
 }
 
 .game {
@@ -39,10 +54,34 @@ body {
 
 .left-panel,
 .right-panel {
-  background: linear-gradient(180deg, var(--panel), #13172c);
-  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.24) 0%,
+    rgba(255, 255, 255, 0.08) 38%,
+    rgba(30, 38, 74, 0.33) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 16px;
-  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px) saturate(145%);
+  -webkit-backdrop-filter: blur(16px) saturate(145%);
+  box-shadow:
+    0 20px 36px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.left-panel::before,
+.right-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.28) 0%,
+    rgba(255, 255, 255, 0) 45%
+  );
+  pointer-events: none;
 }
 
 .left-panel {
@@ -91,6 +130,15 @@ h1 {
   height: auto;
   display: block;
   filter: drop-shadow(0 10px 20px rgba(247, 147, 26, 0.35));
+}
+
+.plus-one-sprite {
+  position: absolute;
+  width: 56px;
+  height: 32px;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .hint {
@@ -154,6 +202,12 @@ h1 {
   font-size: 0.9rem;
   margin: 0;
   line-height: 1.35;
+}
+
+.asset-income {
+  color: #8df5be;
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
 .asset-owned {

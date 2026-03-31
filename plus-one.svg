@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 80" role="img" aria-label="+1">
+  <defs>
+    <linearGradient id="plusGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffe29a"/>
+      <stop offset="100%" stop-color="#f7931a"/>
+    </linearGradient>
+  </defs>
+  <text
+    x="70"
+    y="56"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="56"
+    font-weight="700"
+    fill="url(#plusGradient)"
+    stroke="#ffffff"
+    stroke-width="3"
+    paint-order="stroke"
+  >+1</text>
+</svg>
