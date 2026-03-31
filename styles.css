@@ -11,6 +11,13 @@
   --border: #2c345f;
   --shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
 }
+.no-select {
+  user-select: none;
+  -moz-user-select: none; /* Firefox */
+  -webkit-user-select: none; /* Safari, Chrome, Edge */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  -webkit-user-drag: none; /* WebKit-based browsers for drag control */
+}
 
 * {
   box-sizing: border-box;
