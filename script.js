@@ -20,6 +20,37 @@ let activePlusOnes = [];
 let lastPlusOneFrameTime = performance.now();
 let assets = [];
 
+const upgrades = [
+  {
+    "id": "usedLaptop",
+    "name": "Used Laptop",
+    "description": "Salvaged from a post-rugpull startup. Each laptop auto-farms $0.01 market value of coins per second.",
+    "cost": 5,
+    "income": 1
+  },
+  {
+    "id": "cryptoFarm",
+    "name": "Crypto Farm",
+    "description": "Containerized miner farm that prints hype and clicks at industrial scale.",
+    "cost": 200,
+    "income": 40
+  },
+  {
+    "id": "gpuSupplier",
+    "name": "GPU Supplier",
+    "description": "Backroom deal pipeline for graphics cards that fuel your shitcoin empire.",
+    "cost": 6000,
+    "income": 800
+  },
+  {
+    "id": "ramBrand",
+    "name": "Consumer RAM Brand",
+    "description": "Memory product empire with big margins and even bigger click generation capacity.",
+    "cost": 240000,
+    "income": 16000
+  }
+];
+
 function formatCentsToDollars(cents) {
   const padded = String(cents).padStart(3, "0");
   return `${padded.slice(0, -2)}.${padded.slice(-2)}`;
@@ -31,14 +62,6 @@ function costDisplayLine(costCents) {
 
 function incomeDisplayLine(incomeCents) {
   return `Income: +$${formatCentsToDollars(incomeCents)}/sec`;
-}
-
-async function loadUpgradesJson() {
-  const response = await fetch("upgrades.json");
-  if (!response.ok) {
-    throw new Error(`Failed to load upgrades: ${response.status}`);
-  }
-  return response.json();
 }
 
 function buildAssetCards(upgrades) {
@@ -272,7 +295,6 @@ window.addEventListener("beforeunload", () => {
 window.requestAnimationFrame(animatePlusOneSprites);
 
 async function init() {
-  const upgrades = await loadUpgradesJson();
   buildAssetCards(upgrades);
 
   for (const asset of assets) {
