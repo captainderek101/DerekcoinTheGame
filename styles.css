@@ -498,3 +498,10 @@ h1 {
     min-height: 58vh;
   }
 }
+
+.footer {
+  text-align: center; /* Centers the text */
+  padding: 20px; /* Adds space inside the footer */
+  background-color: #f1f1f1; /* Sets a light gray background */
+  color: #333; /* Sets text color */
+}

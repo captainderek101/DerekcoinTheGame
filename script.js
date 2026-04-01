@@ -21,9 +21,6 @@ const PLUS_ONE_MAX_UPWARD_VELOCITY = -620;
 const PLUS_ONE_MAX_HORIZONTAL_VELOCITY = 260;
 const BULK_BUY_COUNT = 10;
 
-const MARKET_VALUE_ACHIEVEMENT_CENTS = 6_800_000;
-const USED_LAPTOPS_ACHIEVEMENT_COUNT = 100;
-
 let market_value_cents = 0;
 let passiveFractionBuffer = 0;
 let activePlusOnes = [];
@@ -33,6 +30,7 @@ let assets = [];
 let achievementsUnlocked = {
   betterThanBitcoin: false,
   usedPartsStore: false,
+  masterManipulator: false,
 };
 
 const achievementBoxById = new Map();
@@ -46,52 +44,67 @@ function getAssetOwnedById(id) {
 
 const ACHIEVEMENT_DEFS = [
   {
-    id: "betterThanBitcoin",
-    title: "Better Than Bitcoin",
-    description: "Reach $68,000 Market Value.",
-    image: "images/trend-up-arrow.svg",
-    check: () => market_value_cents >= MARKET_VALUE_ACHIEVEMENT_CENTS,
+    id: "masterManipulator",
+    title: "Master Manipulator",
+    description: "Exploit 250 loved ones.",
+    image: "images/devil.svg",
+    check: () => getAssetOwnedById("foolishLovedOne") >= 250,
   },
   {
     id: "usedPartsStore",
     title: "Used Parts Store",
     description: "Own 100 Used Laptops.",
     image: "images/three-dollars.svg",
-    check: () => getAssetOwnedById("usedLaptop") >= USED_LAPTOPS_ACHIEVEMENT_COUNT,
+    check: () => getAssetOwnedById("usedLaptop") >= 100,
+  },
+  {
+    id: "betterThanBitcoin",
+    title: "Better Than Bitcoin",
+    description: "Reach $68,000 Market Value.",
+    image: "images/trend-up-arrow.svg",
+    check: () => market_value_cents >= 6800000,
   },
 ];
 
 const upgrades = [
   {
+    id: "foolishLovedOne",
+    name: "Foolish Loved One",
+    description: "Install a crypto miner on their computer. Each lifelong connection tricked generates $0.01 market value of coins per second.",
+    cost: 20,
+    income: 1,
+    image: "images/person.svg",
+  },
+  {
     id: "usedLaptop",
     name: "Used Laptop",
-    description: "Salvaged from a post-rugpull startup. Each laptop auto-farms $0.01 market value of coins per second.",
-    cost: 10,
-    income: 1,
+    description: "Salvaged from a post-rugpull startup.",
+    cost: 300,
+    income: 18,
     image: "images/laptop.svg",
   },
   {
     id: "cryptoFarm",
     name: "Crypto Farm",
     description: "Containerized miner farm that prints hype at industrial scale.",
-    cost: 200,
-    income: 40,
+    cost: 4500,
+    income: 300,
     image: "images/rake.svg",
   },
   {
     id: "gpuSupplier",
     name: "GPU Supplier",
     description: "Backroom deal pipeline for graphics cards that fuel your shitcoin empire.",
-    cost: 6000,
-    income: 800,
+    cost: 60000,
+    income: 4800,
     image: "images/factory.svg",
   },
   {
     id: "ramBrand",
     name: "Consumer RAM Brand",
     description: "Memory product empire with big margins and even bigger shitcoin hyping capacity.",
-    cost: 240000,
-    income: 16000,
+    cost: 2400000,
+    income: 250000,
     image: "images/tech-logo.svg",
   },
 ];
@@ -374,7 +387,7 @@ function loadGame() {
 function showWelcomeModal(loadResult) {
   if (loadResult.hasSave) {
     welcomeTitleEl.textContent = "Welcome back!";
-    welcomeDescriptionEl.textContent = `Market value increased by $${formatCentsToDollars(loadResult.offlineEarnedCents)} while you were gone`;
+    welcomeDescriptionEl.textContent = `Market value increased by $${formatCentsToDollars(loadResult.offlineEarnedCents)} while you were gone.`;
   } else {
     welcomeTitleEl.textContent = "Welcome, investor!";
     welcomeDescriptionEl.textContent = "Click the Derekcoin to mine $DEREK. Start mining now!";
@@ -388,8 +401,8 @@ function getTotalPassivePerSecond() {
 }
 
 function updateUI() {
-  counterEl.textContent = `Market value: $${formatCentsToDollars(market_value_cents)}`;
-  rateTextEl.textContent = `Growth rate: $${formatCentsToDollars(getTotalPassivePerSecond())}/sec`;
+  counterEl.textContent = `Market Value: $${formatCentsToDollars(market_value_cents)}`;
+  rateTextEl.textContent = `Growth Rate: $${formatCentsToDollars(getTotalPassivePerSecond())}/sec`;
 
   for (const asset of assets) {
     asset.ownedEl.textContent = `Owned: ${asset.owned}`;
