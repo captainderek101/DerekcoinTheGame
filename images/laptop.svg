@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" role="img" aria-label="Laptop">
+  <rect x="14" y="12" width="92" height="52" rx="4" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <rect x="20" y="18" width="80" height="38" rx="2" fill="#0ea5e9" opacity="0.35"/>
+  <rect x="24" y="22" width="72" height="28" rx="1" fill="#0c4a6e"/>
+  <ellipse cx="60" cy="68" rx="44" ry="6" fill="#475569"/>
+  <rect x="8" y="64" width="104" height="8" rx="2" fill="#64748b"/>
+</svg>

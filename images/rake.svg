@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Rake">
+  <path d="M 58 108 L 58 42" stroke="#78350f" stroke-width="8" stroke-linecap="round"/>
+  <rect x="50" y="28" width="20" height="18" rx="3" fill="#92400e"/>
+  <line x1="22" y1="28" x2="98" y2="28" stroke="#57534e" stroke-width="4" stroke-linecap="round"/>
+  <line x1="26" y1="18" x2="26" y2="28" stroke="#78716c" stroke-width="3" stroke-linecap="round"/>
+  <line x1="42" y1="14" x2="42" y2="28" stroke="#78716c" stroke-width="3" stroke-linecap="round"/>
+  <line x1="60" y1="12" x2="60" y2="28" stroke="#78716c" stroke-width="3" stroke-linecap="round"/>
+  <line x1="78" y1="14" x2="78" y2="28" stroke="#78716c" stroke-width="3" stroke-linecap="round"/>
+  <line x1="94" y1="18" x2="94" y2="28" stroke="#78716c" stroke-width="3" stroke-linecap="round"/>
+</svg>

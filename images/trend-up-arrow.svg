@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Upward trend">
+  <defs>
+    <linearGradient id="trendStroke" x1="8" y1="90" x2="90" y2="8" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#9f1239"/>
+      <stop offset="45%" stop-color="#ea580c"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+  </defs>
+  <!-- Line: bottom-left → top-right -->
+  <path
+    d="M 12 86 L 48 44 L 52 66 L 85 20"
+    fill="none"
+    stroke="url(#trendStroke)"
+    stroke-width="9"
+    stroke-linecap="round"
+  />
+  <!-- Arrow head: tip at top-right, base perpendicular to stroke -->
+  <path
+    d="M 75 12 L 95 5 L 95 28 Z"
+    fill="#fb923c"
+    stroke-linejoin="round"
+  />
+</svg>

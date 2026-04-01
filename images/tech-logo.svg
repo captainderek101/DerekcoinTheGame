@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Tech logo">
+  <!-- Two-color mark: deep blue + cyan accent -->
+  <rect x="12" y="12" width="96" height="96" rx="18" fill="#0f172a"/>
+  <circle cx="60" cy="52" r="22" fill="#22d3ee"/>
+  <rect x="38" y="78" width="44" height="10" rx="3" fill="#22d3ee"/>
+  <path d="M 60 34 L 72 58 L 48 58 Z" fill="#0f172a"/>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" role="img" aria-label="Factory">
+  <!-- Ground -->
+  <rect x="4" y="78" width="112" height="18" rx="2" fill="#292524"/>
+  <!-- Main building -->
+  <rect x="12" y="44" width="96" height="34" rx="2" fill="#57534e" stroke="#44403c" stroke-width="2"/>
+  <!-- Roof slab -->
+  <rect x="10" y="38" width="100" height="10" rx="2" fill="#78716c" stroke="#57534e" stroke-width="1"/>
+  <!-- Smokestacks -->
+  <rect x="26" y="18" width="11" height="22" rx="1" fill="#57534e" stroke="#44403c" stroke-width="1"/>
+  <rect x="54" y="12" width="13" height="28" rx="1" fill="#57534e" stroke="#44403c" stroke-width="1"/>
+  <rect x="84" y="22" width="11" height="18" rx="1" fill="#57534e" stroke="#44403c" stroke-width="1"/>
+  <!-- Smoke -->
+  <circle cx="31.5" cy="11" r="5" fill="#e7e5e4" opacity="0.9"/>
+  <circle cx="60.5" cy="5" r="6" fill="#e7e5e4" opacity="0.9"/>
+  <circle cx="89.5" cy="14" r="4" fill="#e7e5e4" opacity="0.9"/>
+  <!-- Windows -->
+  <rect x="20" y="52" width="18" height="12" rx="1" fill="#7dd3fc" opacity="0.95"/>
+  <rect x="44" y="52" width="18" height="12" rx="1" fill="#7dd3fc" opacity="0.95"/>
+  <rect x="68" y="52" width="18" height="12" rx="1" fill="#7dd3fc" opacity="0.95"/>
+  <rect x="92" y="52" width="12" height="12" rx="1" fill="#7dd3fc" opacity="0.95"/>
+  <!-- Loading door -->
+  <rect x="46" y="62" width="28" height="16" rx="1" fill="#44403c" stroke="#292524" stroke-width="1"/>
+  <line x1="60" y1="62" x2="60" y2="78" stroke="#292524" stroke-width="1"/>
+</svg>

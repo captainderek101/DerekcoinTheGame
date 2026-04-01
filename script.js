@@ -18,7 +18,7 @@ const PLUS_ONE_MAX_HORIZONTAL_VELOCITY = 260;
 const BULK_BUY_COUNT = 10;
 
 const MARKET_VALUE_ACHIEVEMENT_CENTS = 6_800_000;
-const USED_LAPTOPS_ACHIEVEMENT_COUNT = 500;
+const USED_LAPTOPS_ACHIEVEMENT_COUNT = 100;
 
 let market_value_cents = 0;
 let passiveFractionBuffer = 0;
@@ -45,45 +45,51 @@ const ACHIEVEMENT_DEFS = [
     id: "betterThanBitcoin",
     title: "Better Than Bitcoin",
     description: "Reach $68,000 Market Value.",
+    image: "images/trend-up-arrow.svg",
     check: () => market_value_cents >= MARKET_VALUE_ACHIEVEMENT_CENTS,
   },
   {
     id: "usedPartsStore",
     title: "Used Parts Store",
-    description: "Own 500 Used Laptops.",
+    description: "Own 100 Used Laptops.",
+    image: "images/three-dollars.svg",
     check: () => getAssetOwnedById("usedLaptop") >= USED_LAPTOPS_ACHIEVEMENT_COUNT,
   },
 ];
 
 const upgrades = [
   {
-    "id": "usedLaptop",
-    "name": "Used Laptop",
-    "description": "Salvaged from a post-rugpull startup. Each laptop auto-farms $0.01 market value of coins per second.",
-    "cost": 5,
-    "income": 1
+    id: "usedLaptop",
+    name: "Used Laptop",
+    description: "Salvaged from a post-rugpull startup. Each laptop auto-farms $0.01 market value of coins per second.",
+    cost: 10,
+    income: 1,
+    image: "images/laptop.svg",
   },
   {
-    "id": "cryptoFarm",
-    "name": "Crypto Farm",
-    "description": "Containerized miner farm that prints hype and clicks at industrial scale.",
-    "cost": 200,
-    "income": 40
+    id: "cryptoFarm",
+    name: "Crypto Farm",
+    description: "Containerized miner farm that prints hype at industrial scale.",
+    cost: 200,
+    income: 40,
+    image: "images/rake.svg",
   },
   {
-    "id": "gpuSupplier",
-    "name": "GPU Supplier",
-    "description": "Backroom deal pipeline for graphics cards that fuel your shitcoin empire.",
-    "cost": 6000,
-    "income": 800
+    id: "gpuSupplier",
+    name: "GPU Supplier",
+    description: "Backroom deal pipeline for graphics cards that fuel your shitcoin empire.",
+    cost: 6000,
+    income: 800,
+    image: "images/factory.svg",
   },
   {
-    "id": "ramBrand",
-    "name": "Consumer RAM Brand",
-    "description": "Memory product empire with big margins and even bigger click generation capacity.",
-    "cost": 240000,
-    "income": 16000
-  }
+    id: "ramBrand",
+    name: "Consumer RAM Brand",
+    description: "Memory product empire with big margins and even bigger shitcoin hyping capacity.",
+    cost: 240000,
+    income: 16000,
+    image: "images/tech-logo.svg",
+  },
 ];
 
 function formatIntegerWithCommas(integerDigits) {
@@ -129,7 +135,7 @@ function buildAchievementBoxes() {
 
     const icon = document.createElement("img");
     icon.className = "achievement-icon";
-    icon.src = "plus-one.svg";
+    icon.src = def.image;
     icon.alt = "";
 
     box.append(tooltip, icon);
@@ -224,13 +230,21 @@ function buildAssetCards(upgrades) {
 
     const row1 = document.createElement("div");
     row1.className = "asset-row";
+    const titleGroup = document.createElement("div");
+    titleGroup.className = "asset-title-group";
+    const iconEl = document.createElement("img");
+    iconEl.className = "asset-icon";
+    iconEl.src = u.image;
+    iconEl.alt = "";
+    iconEl.draggable = false;
     const nameEl = document.createElement("div");
     nameEl.className = "asset-name";
     nameEl.textContent = u.name;
+    titleGroup.append(iconEl, nameEl);
     const costEl = document.createElement("div");
     costEl.className = "asset-cost";
     costEl.textContent = costDisplayLine(u.cost);
-    row1.append(nameEl, costEl);
+    row1.append(titleGroup, costEl);
 
     const descEl = document.createElement("p");
     descEl.className = "asset-desc";
@@ -400,7 +414,7 @@ function spawnPlusOneSprite(mouseX, mouseY) {
     Math.random() * (PLUS_ONE_MAX_UPWARD_VELOCITY - PLUS_ONE_MIN_UPWARD_VELOCITY);
 
   const spriteEl = document.createElement("img");
-  spriteEl.src = "plus-one.svg";
+  spriteEl.src = "images/plus-one.svg";
   spriteEl.alt = "+1";
   spriteEl.className = "plus-one-sprite";
   spriteEl.style.left = `${startX}px`;
