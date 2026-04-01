@@ -86,9 +86,15 @@ const upgrades = [
   }
 ];
 
+function formatIntegerWithCommas(integerDigits) {
+  return integerDigits.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function formatCentsToDollars(cents) {
   const padded = String(cents).padStart(3, "0");
-  return `${padded.slice(0, -2)}.${padded.slice(-2)}`;
+  const dollarsPart = padded.slice(0, -2);
+  const centsPart = padded.slice(-2);
+  return `${formatIntegerWithCommas(dollarsPart)}.${centsPart}`;
 }
 
 function costDisplayLine(costCents) {
@@ -341,12 +347,8 @@ function getTotalPassivePerSecond() {
 }
 
 function updateUI() {
-  const padded_mkv = String(market_value_cents).padStart(3, "0");
-  const mkv_to_display = `${padded_mkv.slice(0, -2)}.${padded_mkv.slice(-2)}`;
-  counterEl.textContent = `Market value: $${mkv_to_display}`;
-  const padded_growth = String(getTotalPassivePerSecond()).padStart(3, "0");
-  const grown_to_display = `${padded_growth.slice(0, -2)}.${padded_growth.slice(-2)}`;
-  rateTextEl.textContent = `Growth rate: $${grown_to_display}/sec`;
+  counterEl.textContent = `Market value: $${formatCentsToDollars(market_value_cents)}`;
+  rateTextEl.textContent = `Growth rate: $${formatCentsToDollars(getTotalPassivePerSecond())}/sec`;
 
   for (const asset of assets) {
     asset.ownedEl.textContent = `Owned: ${asset.owned}`;
