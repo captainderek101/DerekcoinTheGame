@@ -10,6 +10,7 @@ const welcomeOverlayEl = document.getElementById("welcomeOverlay");
 const welcomeCloseButtonEl = document.getElementById("welcomeCloseButton");
 const welcomeTitleEl = document.getElementById("welcomeTitle");
 const welcomeDescriptionEl = document.getElementById("welcomeDescription");
+const resetButtonEl = document.getElementById("resetButton");
 const SAVE_COOKIE_NAME = "derekcoin_save";
 const SAVE_INTERVAL_MS = 10000;
 const PASSIVE_TICKS_PER_SECOND = 30;
@@ -236,6 +237,10 @@ function checkAchievements() {
 
   if (newlyUnlocked) {
     saveGame();
+    
+    if (ACHIEVEMENT_DEFS.every(def => achievementsUnlocked[def.id])) {
+      resetButtonEl.style.display = "block";
+    }
   }
 }
 
@@ -368,6 +373,10 @@ function loadGame() {
           achievementsUnlocked[key] = parsedSave.achievements[key];
         }
       }
+    }
+
+    if (ACHIEVEMENT_DEFS.every(def => achievementsUnlocked[def.id])) {
+      resetButtonEl.style.display = "block";
     }
 
     let offlineEarnedCents = 0;
@@ -543,6 +552,14 @@ async function init() {
     asset.buyButtonEl.addEventListener("click", () => buyAsset(asset));
     asset.buyBulkButtonEl.addEventListener("click", () => buyAssetInBulk(asset));
   }
+
+  resetButtonEl.addEventListener("click", () => {
+    market_value_cents = 0;
+    assets.forEach(asset => asset.owned = 0);
+    achievementsUnlocked = { betterThanBitcoin: false, usedPartsStore: false, masterManipulator: false };
+    resetButtonEl.style.display = "none";
+    updateUI();
+  });
 
   const loadResult = loadGame();
   applyAchievementVisualState();
