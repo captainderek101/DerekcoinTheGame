@@ -11,10 +11,10 @@
   <main class="game">
     <section class="left-panel">
       <h1>$DEREK To The Moon!</h1>
-      <div id="counter" class="counter">Current price: $0.00</div>
+      <div id="counter" class="counter">Market value: $0.00</div>
 
       <button id="clickButton" class="coin-button" aria-label="Mine Derekcoin">
-        <img class="coin-svg" draggable="false" class="no-select" src="derekcoin.svg" alt="Derekcoin button graphic">
+        <img class="coin-svg no-select" draggable="false" src="derekcoin.svg" alt="Derekcoin button graphic">
       </button>
 
       <div class="hint">Click the coin to pump Derekcoin.</div>
@@ -23,64 +23,7 @@
 
     <aside class="right-panel">
       <div class="assets-title">Financial Assets</div>
-      <div class="assets-scroll">
-        <section class="asset-card">
-          <div class="asset-row">
-            <div class="asset-name">Used Laptop</div>
-            <div class="asset-cost">Cost: $0.10 market value</div>
-          </div>
-          <p class="asset-desc">
-            Salvaged from a post-rugpull startup. Each laptop auto-farms $0.01 market value of coins per second.
-          </p>
-          <div class="asset-income">Income: +$0.01/sec</div>
-          <div class="asset-row">
-            <div id="laptopsOwned" class="asset-owned">Owned: 0</div>
-            <button id="buyLaptopButton" class="buy-btn">Buy</button>
-          </div>
-        </section>
-        <section class="asset-card">
-          <div class="asset-row">
-            <div class="asset-name">Crypto Farm</div>
-            <div class="asset-cost">Cost: $2 market value</div>
-          </div>
-          <p class="asset-desc">
-            Containerized miner farm that prints hype and clicks at industrial scale.
-          </p>
-          <div class="asset-income">Income: +$0.40/sec</div>
-          <div class="asset-row">
-            <div id="cryptoFarmsOwned" class="asset-owned">Owned: 0</div>
-            <button id="buyCryptoFarmButton" class="buy-btn">Buy</button>
-          </div>
-        </section>
-        <section class="asset-card">
-          <div class="asset-row">
-            <div class="asset-name">GPU Supplier</div>
-            <div class="asset-cost">Cost: $60 market value</div>
-          </div>
-          <p class="asset-desc">
-            Backroom deal pipeline for graphics cards that fuel your shitcoin empire.
-          </p>
-          <div class="asset-income">Income: +$8/sec</div>
-          <div class="asset-row">
-            <div id="gpuSuppliersOwned" class="asset-owned">Owned: 0</div>
-            <button id="buyGpuSupplierButton" class="buy-btn">Buy</button>
-          </div>
-        </section>
-        <section class="asset-card">
-          <div class="asset-row">
-            <div class="asset-name">Consumer RAM Brand</div>
-            <div class="asset-cost">Cost: $2400 market value</div>
-          </div>
-          <p class="asset-desc">
-            Memory product empire with big margins and even bigger click generation capacity.
-          </p>
-          <div class="asset-income">Income: +$160/sec</div>
-          <div class="asset-row">
-            <div id="ramBrandsOwned" class="asset-owned">Owned: 0</div>
-            <button id="buyRamBrandButton" class="buy-btn">Buy</button>
-          </div>
-        </section>
-      </div>
+      <div class="assets-scroll" id="assetsScroll"></div>
       <div id="status" class="status"></div>
     </aside>
   </main>

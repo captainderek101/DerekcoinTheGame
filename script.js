@@ -3,6 +3,7 @@ const clickButtonEl = document.getElementById("clickButton");
 const rateTextEl = document.getElementById("rateText");
 const statusEl = document.getElementById("status");
 const fxLayerEl = document.getElementById("fxLayer");
+const assetsScrollEl = document.getElementById("assetsScroll");
 const SAVE_COOKIE_NAME = "derekcoin_save";
 const SAVE_INTERVAL_MS = 10000;
 const PASSIVE_TICKS_PER_SECOND = 30;
@@ -17,44 +18,79 @@ let market_value_cents = 0;
 let passiveFractionBuffer = 0;
 let activePlusOnes = [];
 let lastPlusOneFrameTime = performance.now();
-const assets = [
-  {
-    id: "usedLaptop",
-    name: "Used Laptop",
-    cost: 10,
-    passivePerSecond: 1,
-    owned: 0,
-    ownedEl: document.getElementById("laptopsOwned"),
-    buyButtonEl: document.getElementById("buyLaptopButton"),
-  },
-  {
-    id: "cryptoFarm",
-    name: "Crypto Farms",
-    cost: 200,
-    passivePerSecond: 40,
-    owned: 0,
-    ownedEl: document.getElementById("cryptoFarmsOwned"),
-    buyButtonEl: document.getElementById("buyCryptoFarmButton"),
-  },
-  {
-    id: "gpuSupplier",
-    name: "GPU Suppliers",
-    cost: 6000,
-    passivePerSecond: 800,
-    owned: 0,
-    ownedEl: document.getElementById("gpuSuppliersOwned"),
-    buyButtonEl: document.getElementById("buyGpuSupplierButton"),
-  },
-  {
-    id: "ramBrand",
-    name: "Consumer RAM Brands",
-    cost: 240000,
-    passivePerSecond: 16000,
-    owned: 0,
-    ownedEl: document.getElementById("ramBrandsOwned"),
-    buyButtonEl: document.getElementById("buyRamBrandButton"),
-  },
-];
+let assets = [];
+
+function formatCentsToDollars(cents) {
+  const padded = String(cents).padStart(3, "0");
+  return `${padded.slice(0, -2)}.${padded.slice(-2)}`;
+}
+
+function costDisplayLine(costCents) {
+  return `Cost: $${formatCentsToDollars(costCents)} market value`;
+}
+
+function incomeDisplayLine(incomeCents) {
+  return `Income: +$${formatCentsToDollars(incomeCents)}/sec`;
+}
+
+async function loadUpgradesJson() {
+  const response = await fetch("upgrades.json");
+  if (!response.ok) {
+    throw new Error(`Failed to load upgrades: ${response.status}`);
+  }
+  return response.json();
+}
+
+function buildAssetCards(upgrades) {
+  for (const u of upgrades) {
+    const section = document.createElement("section");
+    section.className = "asset-card";
+    section.dataset.assetId = u.id;
+
+    const row1 = document.createElement("div");
+    row1.className = "asset-row";
+    const nameEl = document.createElement("div");
+    nameEl.className = "asset-name";
+    nameEl.textContent = u.name;
+    const costEl = document.createElement("div");
+    costEl.className = "asset-cost";
+    costEl.textContent = costDisplayLine(u.cost);
+    row1.append(nameEl, costEl);
+
+    const descEl = document.createElement("p");
+    descEl.className = "asset-desc";
+    descEl.textContent = u.description;
+
+    const incomeEl = document.createElement("div");
+    incomeEl.className = "asset-income";
+    incomeEl.textContent = incomeDisplayLine(u.income);
+
+    const row2 = document.createElement("div");
+    row2.className = "asset-row";
+    const ownedEl = document.createElement("div");
+    ownedEl.className = "asset-owned";
+    ownedEl.id = `${u.id}-owned`;
+    ownedEl.textContent = "Owned: 0";
+    const buyBtn = document.createElement("button");
+    buyBtn.className = "buy-btn";
+    buyBtn.id = `${u.id}-buy`;
+    buyBtn.textContent = "Buy";
+    row2.append(ownedEl, buyBtn);
+
+    section.append(row1, descEl, incomeEl, row2);
+    assetsScrollEl.appendChild(section);
+
+    assets.push({
+      id: u.id,
+      name: u.name,
+      cost: u.cost,
+      passivePerSecond: u.income,
+      owned: 0,
+      ownedEl,
+      buyButtonEl: buyBtn,
+    });
+  }
+}
 
 function setCookie(name, value, maxAgeSeconds) {
   document.cookie = `${name}=${value}; max-age=${maxAgeSeconds}; path=/; SameSite=Lax`;
@@ -118,11 +154,11 @@ function getTotalPassivePerSecond() {
 }
 
 function updateUI() {
-  const padded_mkv = String(market_value_cents).padStart(3, '0');
-  const mkv_to_display = padded_mkv.slice(0, -2) + '.' + padded_mkv.slice(-2);
+  const padded_mkv = String(market_value_cents).padStart(3, "0");
+  const mkv_to_display = `${padded_mkv.slice(0, -2)}.${padded_mkv.slice(-2)}`;
   counterEl.textContent = `Market value: $${mkv_to_display}`;
-  const padded_growth = String(getTotalPassivePerSecond()).padStart(3, '0');
-  const grown_to_display = padded_growth.slice(0, -2) + '.' + padded_growth.slice(-2);
+  const padded_growth = String(getTotalPassivePerSecond()).padStart(3, "0");
+  const grown_to_display = `${padded_growth.slice(0, -2)}.${padded_growth.slice(-2)}`;
   rateTextEl.textContent = `Growth rate: $${grown_to_display}/sec`;
 
   for (const asset of assets) {
@@ -209,10 +245,6 @@ clickButtonEl.addEventListener("click", (event) => {
   updateUI();
 });
 
-for (const asset of assets) {
-  asset.buyButtonEl.addEventListener("click", () => buyAsset(asset));
-}
-
 setInterval(() => {
   const passivePerSecond = getTotalPassivePerSecond();
   if (passivePerSecond <= 0) {
@@ -238,5 +270,20 @@ window.addEventListener("beforeunload", () => {
 });
 
 window.requestAnimationFrame(animatePlusOneSprites);
-loadGame();
-updateUI();
+
+async function init() {
+  const upgrades = await loadUpgradesJson();
+  buildAssetCards(upgrades);
+
+  for (const asset of assets) {
+    asset.buyButtonEl.addEventListener("click", () => buyAsset(asset));
+  }
+
+  loadGame();
+  updateUI();
+}
+
+init().catch((error) => {
+  setStatus("Could not load financial assets from upgrades.json.", true);
+  console.error(error);
+});
