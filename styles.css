@@ -373,6 +373,14 @@ h1 {
   font-size: 0.95rem;
 }
 
+.asset-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .buy-btn {
   border: 1px solid transparent;
   background: var(--accent);

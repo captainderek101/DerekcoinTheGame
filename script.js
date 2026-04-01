@@ -15,6 +15,7 @@ const PLUS_ONE_GRAVITY = 2200;
 const PLUS_ONE_MIN_UPWARD_VELOCITY = -760;
 const PLUS_ONE_MAX_UPWARD_VELOCITY = -620;
 const PLUS_ONE_MAX_HORIZONTAL_VELOCITY = 260;
+const BULK_BUY_COUNT = 10;
 
 const MARKET_VALUE_ACHIEVEMENT_CENTS = 6_800_000;
 const USED_LAPTOPS_ACHIEVEMENT_COUNT = 500;
@@ -239,11 +240,19 @@ function buildAssetCards(upgrades) {
     ownedEl.className = "asset-owned";
     ownedEl.id = `${u.id}-owned`;
     ownedEl.textContent = "Owned: 0";
+    const actionsEl = document.createElement("div");
+    actionsEl.className = "asset-actions";
     const buyBtn = document.createElement("button");
     buyBtn.className = "buy-btn";
     buyBtn.id = `${u.id}-buy`;
     buyBtn.textContent = "Buy";
-    row2.append(ownedEl, buyBtn);
+    const buyBulkBtn = document.createElement("button");
+    buyBulkBtn.className = "buy-btn buy-btn--bulk";
+    buyBulkBtn.id = `${u.id}-buyBulk`;
+    buyBulkBtn.textContent = "Buy 10";
+    buyBulkBtn.type = "button";
+    actionsEl.append(buyBtn, buyBulkBtn);
+    row2.append(ownedEl, actionsEl);
 
     section.append(row1, descEl, incomeEl, row2);
     assetsScrollEl.appendChild(section);
@@ -256,6 +265,7 @@ function buildAssetCards(upgrades) {
       owned: 0,
       ownedEl,
       buyButtonEl: buyBtn,
+      buyBulkButtonEl: buyBulkBtn,
     });
   }
 }
@@ -341,6 +351,8 @@ function updateUI() {
   for (const asset of assets) {
     asset.ownedEl.textContent = `Owned: ${asset.owned}`;
     asset.buyButtonEl.disabled = market_value_cents < asset.cost;
+    const bulkCost = asset.cost * BULK_BUY_COUNT;
+    asset.buyBulkButtonEl.disabled = market_value_cents < bulkCost;
   }
 
   checkAchievements();
@@ -360,6 +372,19 @@ function buyAsset(asset) {
   market_value_cents -= asset.cost;
   asset.owned += 1;
   setStatus(`Purchased ${asset.name}. Passive farming increased.`);
+  updateUI();
+}
+
+function buyAssetInBulk(asset) {
+  const bulkCost = asset.cost * BULK_BUY_COUNT;
+  if (market_value_cents < bulkCost) {
+    setStatus(`Not enough market value to buy ${BULK_BUY_COUNT} × ${asset.name}.`, true);
+    return;
+  }
+
+  market_value_cents -= bulkCost;
+  asset.owned += BULK_BUY_COUNT;
+  setStatus(`Purchased ${BULK_BUY_COUNT} × ${asset.name}. Passive farming increased.`);
   updateUI();
 }
 
@@ -456,6 +481,7 @@ async function init() {
 
   for (const asset of assets) {
     asset.buyButtonEl.addEventListener("click", () => buyAsset(asset));
+    asset.buyBulkButtonEl.addEventListener("click", () => buyAssetInBulk(asset));
   }
 
   loadGame();
