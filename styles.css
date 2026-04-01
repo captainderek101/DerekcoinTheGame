@@ -132,11 +132,36 @@ h1 {
   transform: scale(0.96);
 }
 
+.coin-rock-wrap {
+  display: inline-block;
+  line-height: 0;
+  animation: coin-rock 2.2s ease-in-out infinite alternate;
+}
+
 .coin-svg {
   width: min(340px, 55vw);
   height: auto;
   display: block;
   filter: drop-shadow(0 10px 20px rgba(247, 147, 26, 0.35));
+  animation: coin-bob 3s ease-in-out infinite alternate;
+}
+
+@keyframes coin-rock {
+  from {
+    transform: rotate(-5deg);
+  }
+  to {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes coin-bob {
+  from {
+    transform: translateY(-7px);
+  }
+  to {
+    transform: translateY(7px);
+  }
 }
 
 .plus-one-sprite {
