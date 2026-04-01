@@ -3,7 +3,7 @@
     "id": "usedLaptop",
     "name": "Used Laptop",
     "description": "Salvaged from a post-rugpull startup. Each laptop auto-farms $0.01 market value of coins per second.",
-    "cost": 10,
+    "cost": 5,
     "income": 1
   },
   {
