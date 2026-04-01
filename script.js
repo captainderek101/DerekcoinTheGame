@@ -4,6 +4,8 @@ const rateTextEl = document.getElementById("rateText");
 const statusEl = document.getElementById("status");
 const fxLayerEl = document.getElementById("fxLayer");
 const assetsScrollEl = document.getElementById("assetsScroll");
+const achievementToastEl = document.getElementById("achievementToast");
+const achievementsRowEl = document.getElementById("achievementsRow");
 const SAVE_COOKIE_NAME = "derekcoin_save";
 const SAVE_INTERVAL_MS = 10000;
 const PASSIVE_TICKS_PER_SECOND = 30;
@@ -14,11 +16,43 @@ const PLUS_ONE_MIN_UPWARD_VELOCITY = -760;
 const PLUS_ONE_MAX_UPWARD_VELOCITY = -620;
 const PLUS_ONE_MAX_HORIZONTAL_VELOCITY = 260;
 
+const MARKET_VALUE_ACHIEVEMENT_CENTS = 6_800_000;
+const USED_LAPTOPS_ACHIEVEMENT_COUNT = 500;
+
 let market_value_cents = 0;
 let passiveFractionBuffer = 0;
 let activePlusOnes = [];
 let lastPlusOneFrameTime = performance.now();
 let assets = [];
+
+let achievementsUnlocked = {
+  betterThanBitcoin: false,
+  usedPartsStore: false,
+};
+
+const achievementBoxById = new Map();
+let achievementToastQueue = [];
+let achievementToastRunning = false;
+
+function getAssetOwnedById(id) {
+  const asset = assets.find((a) => a.id === id);
+  return asset ? asset.owned : 0;
+}
+
+const ACHIEVEMENT_DEFS = [
+  {
+    id: "betterThanBitcoin",
+    title: "Better Than Bitcoin",
+    description: "Reach $68,000 Market Value.",
+    check: () => market_value_cents >= MARKET_VALUE_ACHIEVEMENT_CENTS,
+  },
+  {
+    id: "usedPartsStore",
+    title: "Used Parts Store",
+    description: "Own 500 Used Laptops.",
+    check: () => getAssetOwnedById("usedLaptop") >= USED_LAPTOPS_ACHIEVEMENT_COUNT,
+  },
+];
 
 const upgrades = [
   {
@@ -62,6 +96,117 @@ function costDisplayLine(costCents) {
 
 function incomeDisplayLine(incomeCents) {
   return `Income: +$${formatCentsToDollars(incomeCents)}/sec`;
+}
+
+function buildAchievementBoxes() {
+  achievementBoxById.clear();
+  achievementsRowEl.textContent = "";
+
+  for (const def of ACHIEVEMENT_DEFS) {
+    const box = document.createElement("div");
+    box.className = "achievement-box achievement-box--locked";
+    box.dataset.achievementId = def.id;
+    box.setAttribute("tabindex", "0");
+    box.setAttribute("role", "img");
+    box.setAttribute("aria-label", `${def.title}. ${def.description}`);
+
+    const tooltip = document.createElement("div");
+    tooltip.className = "achievement-tooltip";
+    const titleEl = document.createElement("div");
+    titleEl.className = "achievement-tooltip-title";
+    titleEl.textContent = def.title;
+    const descEl = document.createElement("p");
+    descEl.className = "achievement-tooltip-desc";
+    descEl.textContent = def.description;
+    tooltip.append(titleEl, descEl);
+
+    const icon = document.createElement("img");
+    icon.className = "achievement-icon";
+    icon.src = "plus-one.svg";
+    icon.alt = "";
+
+    box.append(tooltip, icon);
+    achievementsRowEl.appendChild(box);
+    achievementBoxById.set(def.id, box);
+  }
+}
+
+function applyAchievementVisualState() {
+  for (const def of ACHIEVEMENT_DEFS) {
+    const box = achievementBoxById.get(def.id);
+    if (!box) {
+      continue;
+    }
+    const unlocked = achievementsUnlocked[def.id];
+    box.classList.toggle("achievement-box--locked", !unlocked);
+    box.classList.toggle("achievement-box--unlocked", unlocked);
+  }
+}
+
+function showAchievementToastOnce(title, onComplete) {
+  const TOAST_VISIBLE_MS = 3000;
+  const FADE_MS = 550;
+
+  achievementToastEl.textContent = `Achievement unlocked: ${title}`;
+  achievementToastEl.classList.remove("achievement-toast--hiding");
+  achievementToastEl.classList.add("achievement-toast--visible");
+
+  window.setTimeout(() => {
+    achievementToastEl.classList.remove("achievement-toast--visible");
+    achievementToastEl.classList.add("achievement-toast--hiding");
+  }, TOAST_VISIBLE_MS);
+
+  window.setTimeout(() => {
+    achievementToastEl.textContent = "";
+    achievementToastEl.classList.remove("achievement-toast--hiding");
+    onComplete();
+  }, TOAST_VISIBLE_MS + FADE_MS);
+}
+
+function runAchievementToastQueue() {
+  if (achievementToastQueue.length === 0) {
+    achievementToastRunning = false;
+    return;
+  }
+
+  achievementToastRunning = true;
+  const title = achievementToastQueue.shift();
+  showAchievementToastOnce(title, runAchievementToastQueue);
+}
+
+function enqueueAchievementToast(title) {
+  achievementToastQueue.push(title);
+  if (!achievementToastRunning) {
+    runAchievementToastQueue();
+  }
+}
+
+function checkAchievements() {
+  let newlyUnlocked = false;
+
+  for (const def of ACHIEVEMENT_DEFS) {
+    if (achievementsUnlocked[def.id]) {
+      continue;
+    }
+    if (!def.check()) {
+      continue;
+    }
+
+    achievementsUnlocked[def.id] = true;
+    newlyUnlocked = true;
+
+    const box = achievementBoxById.get(def.id);
+    if (box) {
+      box.classList.remove("achievement-box--locked");
+      box.classList.add("achievement-box--unlocked");
+    }
+
+    enqueueAchievementToast(def.title);
+  }
+
+  if (newlyUnlocked) {
+    saveGame();
+  }
 }
 
 function buildAssetCards(upgrades) {
@@ -136,6 +281,7 @@ function saveGame() {
   const saveData = {
     clicks: market_value_cents,
     assets: {},
+    achievements: { ...achievementsUnlocked },
   };
 
   for (const asset of assets) {
@@ -167,6 +313,14 @@ function loadGame() {
         }
       }
     }
+
+    if (parsedSave.achievements && typeof parsedSave.achievements === "object") {
+      for (const key of Object.keys(achievementsUnlocked)) {
+        if (typeof parsedSave.achievements[key] === "boolean") {
+          achievementsUnlocked[key] = parsedSave.achievements[key];
+        }
+      }
+    }
   } catch (error) {
     setStatus("Save data was invalid and could not be loaded.", true);
   }
@@ -188,6 +342,8 @@ function updateUI() {
     asset.ownedEl.textContent = `Owned: ${asset.owned}`;
     asset.buyButtonEl.disabled = market_value_cents < asset.cost;
   }
+
+  checkAchievements();
 }
 
 function setStatus(message, isError = false) {
@@ -296,16 +452,18 @@ window.requestAnimationFrame(animatePlusOneSprites);
 
 async function init() {
   buildAssetCards(upgrades);
+  buildAchievementBoxes();
 
   for (const asset of assets) {
     asset.buyButtonEl.addEventListener("click", () => buyAsset(asset));
   }
 
   loadGame();
+  applyAchievementVisualState();
   updateUI();
 }
 
 init().catch((error) => {
-  setStatus("Could not load financial assets from upgrades.json.", true);
+  setStatus("Could not start the game. Try reloading the page.", true);
   console.error(error);
 });
