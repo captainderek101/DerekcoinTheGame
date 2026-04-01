@@ -6,6 +6,10 @@ const fxLayerEl = document.getElementById("fxLayer");
 const assetsScrollEl = document.getElementById("assetsScroll");
 const achievementToastEl = document.getElementById("achievementToast");
 const achievementsRowEl = document.getElementById("achievementsRow");
+const welcomeOverlayEl = document.getElementById("welcomeOverlay");
+const welcomeCloseButtonEl = document.getElementById("welcomeCloseButton");
+const welcomeTitleEl = document.getElementById("welcomeTitle");
+const welcomeDescriptionEl = document.getElementById("welcomeDescription");
 const SAVE_COOKIE_NAME = "derekcoin_save";
 const SAVE_INTERVAL_MS = 10000;
 const PASSIVE_TICKS_PER_SECOND = 30;
@@ -312,6 +316,7 @@ function saveGame() {
     clicks: market_value_cents,
     assets: {},
     achievements: { ...achievementsUnlocked },
+    savedAtUtcMs: Date.now(),
   };
 
   for (const asset of assets) {
@@ -325,7 +330,7 @@ function saveGame() {
 function loadGame() {
   const rawSave = getCookie(SAVE_COOKIE_NAME);
   if (!rawSave) {
-    return;
+    return { hasSave: false, offlineEarnedCents: 0 };
   }
 
   try {
@@ -351,9 +356,31 @@ function loadGame() {
         }
       }
     }
+
+    let offlineEarnedCents = 0;
+    if (typeof parsedSave.savedAtUtcMs === "number" && Number.isFinite(parsedSave.savedAtUtcMs)) {
+      const elapsedSeconds = Math.max(0, Math.floor((Date.now() - parsedSave.savedAtUtcMs) / 1000));
+      offlineEarnedCents = getTotalPassivePerSecond() * elapsedSeconds;
+      market_value_cents += offlineEarnedCents;
+    }
+
+    return { hasSave: true, offlineEarnedCents };
   } catch (error) {
     setStatus("Save data was invalid and could not be loaded.", true);
+    return { hasSave: false, offlineEarnedCents: 0 };
   }
+}
+
+function showWelcomeModal(loadResult) {
+  if (loadResult.hasSave) {
+    welcomeTitleEl.textContent = "Welcome back!";
+    welcomeDescriptionEl.textContent = `Market value increased by $${formatCentsToDollars(loadResult.offlineEarnedCents)} while you were gone`;
+  } else {
+    welcomeTitleEl.textContent = "Welcome, investor!";
+    welcomeDescriptionEl.textContent = "Click the Derekcoin to mine $DEREK. Start mining now!";
+  }
+
+  welcomeOverlayEl.classList.remove("welcome-overlay--hidden");
 }
 
 function getTotalPassivePerSecond() {
@@ -489,6 +516,10 @@ window.addEventListener("beforeunload", () => {
   saveGame();
 });
 
+welcomeCloseButtonEl.addEventListener("click", () => {
+  welcomeOverlayEl.classList.add("welcome-overlay--hidden");
+});
+
 window.requestAnimationFrame(animatePlusOneSprites);
 
 async function init() {
@@ -500,9 +531,10 @@ async function init() {
     asset.buyBulkButtonEl.addEventListener("click", () => buyAssetInBulk(asset));
   }
 
-  loadGame();
+  const loadResult = loadGame();
   applyAchievementVisualState();
   updateUI();
+  showWelcomeModal(loadResult);
 }
 
 init().catch((error) => {

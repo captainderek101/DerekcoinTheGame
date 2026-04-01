@@ -49,6 +49,61 @@ body {
   z-index: 999;
 }
 
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(3, 5, 15, 0.62);
+}
+
+.welcome-overlay--hidden {
+  display: none;
+}
+
+.welcome-modal {
+  position: relative;
+  width: min(560px, 94vw);
+  padding: 46px 22px 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(135deg, #3f3f46 0%, #232329 100%);
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.48);
+  color: #f4f7ff;
+  text-align: center;
+}
+
+.welcome-close {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #575760;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #44444d 0%, #232329 100%);
+  color: #f8fafc;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.welcome-title {
+  margin: 0 0 10px;
+  font-size: clamp(1.35rem, 2.8vw, 1.8rem);
+}
+
+.welcome-description {
+  margin: 0;
+  color: #dbe2ff;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
 .game {
   max-width: 1200px;
   margin: 0 auto;

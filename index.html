@@ -8,6 +8,13 @@
 </head>
 <body>
   <div id="fxLayer" class="fx-layer" aria-hidden="true"></div>
+  <div id="welcomeOverlay" class="welcome-overlay welcome-overlay--hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="welcome-modal">
+      <button id="welcomeCloseButton" class="welcome-close" type="button" aria-label="Close welcome message">x</button>
+      <h2 id="welcomeTitle" class="welcome-title">Welcome, investor!</h2>
+      <p id="welcomeDescription" class="welcome-description">Click the Derekcoin to mine $DEREK. Start mining now!</p>
+    </div>
+  </div>
   <main class="game">
     <section class="left-panel">
       <h1>$DEREK To The Moon!</h1>
